@@ -29,28 +29,28 @@ def binary_sid_to_string(sid_bytes):
     if len(sid_bytes) != expected_length:
         raise ValueError(f"Invalid SID length: expected {expected_length} bytes, got {len(sid_bytes)}")
 
-    #認証局を抽出（6バイト、ビッグエンディアン）
+    
     identifier_authority = int.from_bytes(sid_bytes[2:8], byteorder='big')
 
-    # サブ認証局を抽出（各4バイト、リトルエンディアン）
+   
     subauthorities = []
     for i in range(subauthority_count):
         start = 8 + i * 4
         subauthority = int.from_bytes(sid_bytes[start:start+4], byteorder='little')
         subauthorities.append(str(subauthority))
 
-    # SID文字列を構築
+  
     sid_string = f"S-{revision}-{identifier_authority}-{'-'.join(subauthorities)}"
     return sid_string
 
 if __name__ == "__main__":
-    # コマンドライン引数をチェック
+    
     if len(sys.argv) != 2:
         print("Usage: python convert_sid.py <binary_sid>")
         print("Example: python convert_sid.py \"0105000000000005150000005b7bb0f398aa2245ad4a1ca44f040000\"")
         sys.exit(1)
 
-    # コマンドラインからバイナリSIDを取得
+    
     input_sid = sys.argv[1]
     try:
         result = binary_sid_to_string(input_sid)
